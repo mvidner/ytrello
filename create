@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+if ARGV.empty? || ARGV[0].include?("-h")
+  puts "Usage: #{$0} bug_number"
+  puts "  Creates a trello card for a bug"
+  puts "  Does not check if it exists"
+  exit 0
+end
+
+def bicho_details(bug_id)
+  `cd #{ENV['HOME']}/svn/bicho; bundle exec bicho-details #{bug_id}`.chomp
+end
+
+BOARD = "5507f013b863aa041618871d" # Agile YaST Incoming Board
+
+# in that board:
+PRODUCT_LISTS = {
+  /SLE[SD]12-SP1/   => "5502d6719b0d5db70bcf6655", # SLE12-SP1 development
+  /SLE[SD]12/       => "5507f04f2c885ffbdd53208a", # SLE12-maintenance
+  # not yet:
+  # /SLE[SD]12-SP2/ => "5538994821027776154180eb",      # SLE12-SP2 development
+  # /SLE[SD]12-SP1/ => "5507f04ba946797c971ecde3",      # SLE12-SP1 maintenance
+  /SLE[SD]11-SP4/   => "5507f0549c920252e89da5ad", # SLE11-SP4 development
+  /SLE[SD]11/       => "5507f140ab44b6bcfcc6c561", # SLE11-maintenance
+  /^oS/             => "550800984de3079fa9ded12a", # openSUSE
+  # fallback
+  /./               => "5507f28d31c1cfac7a83eb72"  # Generic Ideas
+}
+
+def product_to_list(product)
+  PRODUCT_LISTS.to_a.each do |pattern, list_id|
+    return list_id if product =~ pattern
+  end
+  raise "Internal error, PRODUCT_LISTS did not match"
+end
+
+def markdown_link(text, url)
+  "[#{text}](#{url})"
+end
+
+def bz_markdown_link(id)
+  markdown_link("bsc##{id}", "https://bugzilla.suse.com/show_bug.cgi?id=#{id}")
+end
+
+bug_id = ARGV[0]
+card_name = bicho_details bug_id
+product = card_name.split.first
+description = bz_markdown_link bug_id
+
+command = ["trello", "card", "create",
+  "-b", BOARD, "-l", product_to_list(product),
+  "-n", card_name, "-d", description]
+puts command.inspect
+system(*command)
+
