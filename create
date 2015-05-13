@@ -1,14 +1,29 @@
 #!/usr/bin/env ruby
+require "English"
 
 if ARGV.empty? || ARGV[0].include?("-h")
-  puts "Usage: #{$0} bug_number"
+  puts "Usage: #{$PROGRAM_NAME} bug_number"
   puts "  Creates a trello card for a bug"
   puts "  Does not check if it exists"
   exit 0
 end
 
-def bicho_details(bug_id)
-  `cd #{ENV['HOME']}/svn/bicho; bundle exec bicho-details #{bug_id}`.chomp
+`bicho version 2>&1`
+unless $CHILD_STATUS.success?
+  puts "https://rubygems.org/gems/bicho >= 0.0.10 is required"
+  exit 1
+end
+
+# abbreviate a SUSE product name
+def abbrev(s)
+  s
+    .sub("openSUSE", "oS")
+    .sub("SUSE Linux Enterprise Desktop", "SLED")
+    .sub("SUSE Linux Enterprise Server",  "SLES")
+    .sub(/\(.*\)/, "")          # remove superfluous abbreviation
+    .sub(" SP", "-SP")
+    .sub(" Factory", "-TW")     # Tumbleweed
+    .tr(" ", "")
 end
 
 BOARD = "5507f013b863aa041618871d" # Agile YaST Incoming Board
@@ -31,7 +46,7 @@ def product_to_list(product)
   PRODUCT_LISTS.to_a.each do |pattern, list_id|
     return list_id if product =~ pattern
   end
-  raise "Internal error, PRODUCT_LISTS did not match"
+  fail "Internal error, PRODUCT_LISTS did not match"
 end
 
 def markdown_link(text, url)
@@ -42,14 +57,23 @@ def bz_markdown_link(id)
   markdown_link("bsc##{id}", "https://bugzilla.suse.com/show_bug.cgi?id=#{id}")
 end
 
-bug_id = ARGV[0]
-card_name = bicho_details bug_id
-product = card_name.split.first
-description = bz_markdown_link bug_id
+def bicho_details(bug_id)
+  format = "%{summary}\n%{product}"
+  res = `bicho -b suse show -f '#{format}' #{bug_id}`
+  lines = res.split(/\n/)
+  { summary: lines[0], product: lines[1] }
+end
 
-command = ["trello", "card", "create",
+bug_id      = ARGV[0]
+details     = bicho_details(bug_id)
+product     = abbrev(details[:product])
+card_name   = "#{product} ##{bug_id} #{details[:summary]}"
+description = bz_markdown_link(bug_id)
+
+command = [
+  "trello", "card", "create",
   "-b", BOARD, "-l", product_to_list(product),
-  "-n", card_name, "-d", description]
+  "-n", card_name, "-d", description
+]
 puts command.inspect
 system(*command)
-
