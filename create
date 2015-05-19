@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require "English"
+require "trello"
 
 if ARGV.empty? || ARGV[0].include?("-h")
   puts "Usage: #{$PROGRAM_NAME} bug_number"
@@ -14,6 +15,15 @@ unless $CHILD_STATUS.success?
   exit 1
 end
 
+Trello.configure do |config|
+  config.developer_public_key = ENV["TRELLO_DEVELOPER_PUBLIC_KEY"]
+  config.member_token         = ENV["TRELLO_MEMBER_TOKEN"]
+end
+
+def debug(s)
+  $stderr.puts s if $VERBOSE
+end
+
 # abbreviate a SUSE product name
 def abbrev(s)
   s
@@ -26,7 +36,8 @@ def abbrev(s)
     .tr(" ", "")
 end
 
-BOARD = "5507f013b863aa041618871d" # Agile YaST Incoming Board
+INC_BOARD_ID  = "5507f013b863aa041618871d" # Agile YaST Incoming Board
+MAIN_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST
 
 # in that board:
 PRODUCT_LISTS = {
@@ -69,11 +80,41 @@ details     = bicho_details(bug_id)
 product     = abbrev(details[:product])
 card_name   = "#{product} ##{bug_id} #{details[:summary]}"
 description = bz_markdown_link(bug_id)
+list_id     = product_to_list(product)
+# list_id     = "546336636415e12617f88e47" # My work / Done
 
-command = [
-  "trello", "card", "create",
-  "-b", BOARD, "-l", product_to_list(product),
-  "-n", card_name, "-d", description
-]
-puts command.inspect
-system(*command)
+debug "Trello query"
+inc_board  = Trello::Board.find(INC_BOARD_ID)  || fail
+main_board = Trello::Board.find(MAIN_BOARD_ID) || fail
+
+labels = inc_board.labels(false) # false: objects; true: names
+new_item_label = labels.find{|i| i.name =~ /new.item/i } || fail
+
+list = Trello::List.find(list_id) ||
+  fail("Cannot find list #{list_id} to represent #{details[:product]}")
+
+# Array#to_a -> Trello::MultiAssociation, WTF?!
+def to_array(a)
+  a.map {|i| i}
+end
+
+inc_cards  = to_array inc_board.cards
+main_cards = to_array main_board.cards
+
+existing = (inc_cards + main_cards).find_all do |c|
+  c.name =~ /\D#{bug_id}\D/
+end
+
+if ! existing.empty?
+  puts "Card for bug already exists:"
+  existing.each {|c| puts c.url}
+  exit 2
+end
+
+debug "Creating"
+card = Trello::Card.create(list_id: list_id,
+                           name: card_name,
+                           desc: description,
+                           pos: "top")
+card.add_label(new_item_label)
+puts "Created #{bug_id} => #{card.short_url}"
