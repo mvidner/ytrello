@@ -1,0 +1,10 @@
+#!/bin/sh
+# Add a [related] URL field to a bug
+BUGNUM="$1"
+CARDURL="$2"
+
+HASURL=$(bugzilla query --outputformat='%{bug_file_loc}' -b "$BUGNUM")
+if [ -z "$HASURL" ]; then
+  bugzilla modify --url "$CARDURL" "$BUGNUM"
+  echo "Card URL added to Bugzilla"
+fi

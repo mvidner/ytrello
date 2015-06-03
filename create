@@ -105,16 +105,24 @@ existing = (inc_cards + main_cards).find_all do |c|
   c.name =~ /\D#{bug_id}\D/
 end
 
-if ! existing.empty?
+card = nil
+if existing.empty?
+  debug "Creating"
+  card = Trello::Card.create(list_id: list_id,
+                             name: card_name,
+                             desc: description,
+                             pos: "top")
+  card.add_label(new_item_label)
+  puts "Created #{bug_id} => #{card.short_url}"
+else
   puts "Card for bug already exists:"
   existing.each {|c| puts c.url}
-  exit 2
+  if existing.size == 1
+    card = existing.first
+  end
 end
 
-debug "Creating"
-card = Trello::Card.create(list_id: list_id,
-                           name: card_name,
-                           desc: description,
-                           pos: "top")
-card.add_label(new_item_label)
-puts "Created #{bug_id} => #{card.short_url}"
+if card
+  debug "Assigning card URL in Bugzilla"
+  system "./addurl", bug_id.to_s, card.short_url.to_s
+end
