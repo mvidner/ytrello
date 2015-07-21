@@ -4,8 +4,7 @@ require "trello"
 
 if ARGV.empty? || ARGV[0].include?("-h")
   puts "Usage: #{$PROGRAM_NAME} bug_number"
-  puts "  Creates a trello card for a bug"
-  puts "  Does not check if it exists"
+  puts "  Creates a trello card for a bug, links the bug to the card"
   exit 0
 end
 
@@ -37,7 +36,8 @@ def abbrev(s)
 end
 
 INC_BOARD_ID  = "5507f013b863aa041618871d" # Agile YaST Incoming Board
-MAIN_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST
+MAIN_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST: Team 1
+# FIXME add Team A
 
 # in that board:
 PRODUCT_LISTS = {
