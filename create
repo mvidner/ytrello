@@ -36,8 +36,8 @@ def abbrev(s)
 end
 
 INC_BOARD_ID  = "5507f013b863aa041618871d" # Agile YaST Incoming Board
-MAIN_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST: Team 1
-# FIXME add Team A
+TEAM_1_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST: Team 1
+TEAM_A_BOARD_ID = "557833ad6be7b9634f089201" # Agile YaST: Team A
 
 # in that board:
 PRODUCT_LISTS = {
@@ -85,7 +85,8 @@ list_id     = product_to_list(product)
 
 debug "Trello query"
 inc_board  = Trello::Board.find(INC_BOARD_ID)  || fail
-main_board = Trello::Board.find(MAIN_BOARD_ID) || fail
+t1_board = Trello::Board.find(TEAM_1_BOARD_ID) || fail
+ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || fail
 
 labels = inc_board.labels(false) # false: objects; true: names
 new_item_label = labels.find{|i| i.name =~ /new.item/i } || fail
@@ -99,9 +100,10 @@ def to_array(a)
 end
 
 inc_cards  = to_array inc_board.cards
-main_cards = to_array main_board.cards
+t1_cards   = to_array t1_board.cards
+ta_cards   = to_array ta_board.cards
 
-existing = (inc_cards + main_cards).find_all do |c|
+existing = (inc_cards + t1_cards + ta_cards).find_all do |c|
   c.name =~ /\D#{bug_id}\D/
 end
 

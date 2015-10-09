@@ -16,7 +16,7 @@ Tools to help with the YaST Trello boards.
 
 ### Setup
 
-**ruby-trello ** reads the environment variables
+**ruby-trello** reads the environment variables
 `TRELLO_DEVELOPER_PUBLIC_KEY` and `TRELLO_MEMBER_TOKEN`. I put them in
 `~/.trellorc` and source it from my `~/.bashrc`
 
