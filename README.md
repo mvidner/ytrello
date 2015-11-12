@@ -14,6 +14,19 @@ Tools to help with the YaST Trello boards.
 [t]: https://github.com/jeremytregunna/ruby-trello
 [p]: https://build.opensuse.org/package/show/openSUSE:Factory/python-bugzilla
 
+### Installation
+
+Install the `python-bugzilla` tool via `sudo zypper install python-bugzilla`.
+
+It is recommended to use bundler to install the Rubygems, run this in the Git
+checkout:
+
+```sh
+bundle install --path vendor/bundle
+```
+
+Then prefix the commands by `bundle exec`, e.g. `bundle exec ./check`.
+
 ### Setup
 
 **ruby-trello** reads the environment variables
@@ -61,3 +74,33 @@ create $BUG_NUMBER
 ```sh
 addurl 999999 https://trello.example.com/cards/my-first-card
 ```
+
+- **check** runs some validation checks and reports the found issues:
+
+  - It checks whether the YaST team bugs have a link to a Trello card (in the
+    **URL** field).
+  - It checks that all open YaST team bugs are tracked in Trello (i.e. a card
+    exists).
+  - Reports the Trello cards which refer to a closed bug in bugzilla. These
+    cards should be moved to *Done* or archived if the bug is not valid anymore.
+
+  The command supports a simple auto correction mode. In this mode it tries
+  to fix the found issues. Use `-a` or `--auto-correct` option to turn it on
+  (by default it is disabled).
+
+  Currently these auto correct actions are performed:
+
+  - The missing links from Bugzilla bugs to the Trello cards are added.
+  - Missing Trello cards are created
+
+  It is recommended to run it in read-only mode first to see the found issues:
+
+  ```sh
+  check
+  ```
+
+  If the reported changes are valid you can fix them by running:
+
+  ```sh
+  check -a
+  ```
