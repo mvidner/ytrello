@@ -1,0 +1,223 @@
+#!/usr/bin/env ruby
+
+require "rainbow"
+require "optparse"
+
+require_relative "ytrello"
+
+# If a Trello card contains just a number without "FATE" (case insensitive)
+# it might be a FATE number instead of a bug number. Consider it as a possible
+# FATE number if it is below this limit.
+FATE_NUMBER_MAX = 400_000
+
+def parse_options
+  options = {}
+
+  op = OptionParser.new do |opts|
+    opts.banner =
+      "\nThis script checks whether the YaST Trello boards are in sync with the Bugzilla.\n\n" \
+      "The Trello credentials are read from the #{ENV_TRELLO_KEY} and #{ENV_TRELLO_TOKEN}\n" \
+      "environment variables. The Bugzilla credentials are read from the '~/.oscrc' file.\n\n" \
+      "Usage: #{$PROGRAM_NAME} [options]\n\n"
+
+    opts.on("-a", "--auto-correct", "Try to fix the detected problems, " \
+      "currently only the missing Trello cards are created") do
+
+      options[:auto_correct] = true
+    end
+
+    opts.on("-h", "--help", "Print this help") do
+      puts opts
+      exit 0
+    end
+  end
+
+  op.parse!
+
+  options
+end
+
+
+# query the bugs assigned to the YaST Team
+# @return [Hash<Symbol,Array<BichoBug>>] :all => all team bugs, :missing =>
+#   bugs with empty URL attribute, :unknown => the URL is set, but does not
+#   point to a Trello URL
+def check_team_bugs
+  missing_bugs = []
+  unknown_links = []
+
+  # ignore closed bugs
+  all_bugs = Bicho::Bug.where(assigned_to: BUGZILLA_ACCOUNT).select do |bug|
+    bug.resolution.empty?
+  end
+
+  all_bugs.each do |bug|
+    if bug["url"].nil? || bug["url"].empty?
+      missing_bugs << bug
+    elsif !bug["url"].start_with?("https://trello.com/")
+      unknown_links << bug
+    end
+  end
+
+  { all: all_bugs, missing: missing_bugs, unknown: unknown_links }
+end
+
+# read all Trello cards from the Incoming and the Team boards
+# @return [Array<Trello::Card>] found cards
+def trello_cards
+  inc_board  = Trello::Board.find(INC_BOARD_ID)  || raise
+  t1_board = Trello::Board.find(TEAM_1_BOARD_ID) || raise
+  ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || raise
+
+  # [*] If you need to get all lists in a board:
+  # inc_board.lists.each {|l| puts "# #{l.name}\n\"#{l.id}\","}
+
+  to_array(inc_board.cards) + to_array(t1_board.cards) + to_array(ta_board.cards)
+end
+
+# @return [Hash<Fixnum,Trello::Card>] map bug ID => Trello card
+def find_trello_bugs
+  trello_bugs = {}
+
+  trello_cards.each do |card|
+    # skip cards not in the specified list
+    next unless CHECKED_LISTS.include?(card.list_id)
+
+    # TODO: skip FATE cards for now, maybe add a FATE check as well?
+    next if card.name.match(/\bfate\b/i)
+
+    # skip cards not containing any bug number
+    # expect bug numbers have 6 or 7 digits
+    next unless card.name.match(/\b#?(\d{6,7})\b/)
+
+    bug_id = Regexp.last_match[1].to_i
+    trello_bugs[bug_id] = card
+  end
+
+  trello_bugs
+end
+
+def find_closed_trello_bugs(found_trello_bugs)
+  closed_bugs = {}
+
+  Bicho.client.get_bugs(*found_trello_bugs.keys).each do |bug|
+    next if bug.resolution.empty?
+    closed_bugs[bug] = found_trello_bugs[bug.id]
+  end
+
+  closed_bugs
+end
+
+def print_bugzilla_summary(team_bugs)
+  team_bugs[:missing].each do |bug|
+    puts "Bug #{Rainbow(bug.url).yellow}: URL attribute not set"
+  end
+
+  team_bugs[:unknown].each do |bug|
+    puts "Bug #{Rainbow(bug.url).yellow}: URL \"#{bug["url"]}\"does not link to Trello "
+  end
+end
+
+# check if a number in Trello card label possibly refers to FATE instead of bugzilla
+def print_trello_fate_warnings(open_trello_bugs)
+  open_trello_bugs.each do |bug_id, card|
+    # enough high number or "bug" in the name
+    next if bug_id > FATE_NUMBER_MAX || card.name.match(/\bbug\b/i)
+
+    puts "#{Rainbow(card.short_url).yellow} - " \
+      "#{card.name.sub(bug_id.to_s, Rainbow(bug_id.to_s).magenta)}"
+    puts "Number #{Rainbow(bug_id).magenta} possibly refers to " \
+      "FATE, add \"FATE\" string if it is a feature number"
+    puts
+  end
+end
+
+def print_trello_closed_bugs(trello_closed_bugs)
+  trello_closed_bugs.each do |bug, card|
+    puts Rainbow(card.name).cyan
+    puts "#{Rainbow(card.short_url).yellow} refers to #{Rainbow(bug.url).yellow}" \
+      " resolved as #{Rainbow(bug.resolution).red}"
+    puts
+  end
+end
+
+def print_summary_line(line, ok)
+  puts Rainbow(line).color(ok ? :green : :red)
+end
+
+def print_summary(team_bugs, open_trello_bugs, closed_trello_bugs)
+  not_in_trello = bugs_not_in_trello(team_bugs, open_trello_bugs)
+
+  puts
+  print_summary_line("Found #{not_in_trello.size} bugs not in Trello", not_in_trello.empty?)
+  print_summary_line("Found #{team_bugs[:all].size} YaST Team bugs, " \
+    "#{team_bugs[:missing].size} do not link to Trello.", team_bugs[:missing].empty?)
+  print_summary_line("Found #{open_trello_bugs.size} bug cards in Trello, " \
+    "#{closed_trello_bugs.size} possibly refer to a closed bug.", closed_trello_bugs.empty?)
+  puts
+end
+
+def bugs_not_in_trello(team_bugs, open_trello_bugs)
+  team_bugs[:all].map(&:id) - open_trello_bugs.keys.map(&:to_i)
+end
+
+def print_not_in_trello(not_in_trello)
+  not_in_trello.each do |bug|
+    bug_url = "https://bugzilla.suse.com/#{bug}"
+    puts "Bug #{Rainbow(bug_url).yellow} is not tracked in Trello"
+  end
+end
+
+def print_result(team_bugs, open_trello_bugs, closed_trello_bugs)
+  not_in_trello = bugs_not_in_trello(team_bugs, open_trello_bugs)
+  print_not_in_trello(not_in_trello)
+  print_bugzilla_summary(team_bugs)
+  print_trello_fate_warnings(open_trello_bugs)
+  print_trello_closed_bugs(closed_trello_bugs)
+  print_summary(team_bugs, open_trello_bugs, closed_trello_bugs)
+end
+
+######################################################
+
+options = parse_options
+
+check_trello_credentials
+
+setup_bicho
+setup_trello
+
+puts "Reading the bugs assigned to #{BUGZILLA_ACCOUNT}..."
+team_bugs = check_team_bugs
+
+puts "Reading the YaST Trello cards..."
+trello_bugs = find_trello_bugs
+
+puts "Reading bugs referred in the YaST Trello cards..."
+closed_trello_bugs = find_closed_trello_bugs(trello_bugs)
+not_in_trello = bugs_not_in_trello(team_bugs, trello_bugs)
+
+print_result(team_bugs, trello_bugs, closed_trello_bugs)
+
+# no issue found
+exit 0 if team_bugs[:missing].empty? && closed_trello_bugs.empty? && not_in_trello.empty?
+
+# try fixing some problems
+if options[:auto_correct]
+  puts "Running autocorrection..."
+  create_script = File.expand_path("../create", __FILE__)
+
+  team_bugs[:missing].each do |bug|
+    puts "Creating a Trello card for bug ##{bug.id}..."
+    `#{create_script} #{bug.id}`
+  end
+
+  not_in_trello.each do |bug|
+    puts "Creating a Trello card for bug ##{bug}..."
+    `#{create_script} #{bug}`
+  end
+
+  # potentially fixed everything?
+  exit 0 if closed_trello_bugs.empty?
+end
+
+exit 1
