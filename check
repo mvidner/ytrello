@@ -37,7 +37,6 @@ def parse_options
   options
 end
 
-
 # query the bugs assigned to the YaST Team
 # @return [Hash<Symbol,Array<BichoBug>>] :all => all team bugs, :missing =>
 #   bugs with empty URL attribute, :unknown => the URL is set, but does not

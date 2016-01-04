@@ -52,11 +52,10 @@ ENV_TRELLO_KEY = "TRELLO_DEVELOPER_PUBLIC_KEY"
 ENV_TRELLO_TOKEN = "TRELLO_MEMBER_TOKEN"
 
 def check_trello_credentials
-  if !ENV[ENV_TRELLO_KEY] || !ENV[ENV_TRELLO_TOKEN]
-    $stderr.puts "Error: Pass the Trello credentials via #{ENV_TRELLO_KEY}" \
-    " and\n#{ENV_TRELLO_TOKEN} environment variables."
-    exit 1
-  end
+  return if ENV[ENV_TRELLO_KEY] && ENV[ENV_TRELLO_TOKEN]
+  $stderr.puts "Error: Pass the Trello credentials via #{ENV_TRELLO_KEY}" \
+  " and\n#{ENV_TRELLO_TOKEN} environment variables."
+  exit 1
 end
 
 # set the SUSE Bugzilla connection
