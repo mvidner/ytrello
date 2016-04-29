@@ -1,3 +1,18 @@
+# install missing gems using bundler
+bundler_dir =  File.expand_path("../.vendor", __FILE__)
+
+if !File.exist?(bundler_dir)
+  puts "Installing needed Rubygems to #{bundler_dir} ..."
+  require "shellwords"
+  if !system "bundle install --path #{Shellwords.escape(bundler_dir)}"
+    $stderr.puts "Installing the needed Ruby gems failed"
+    exit 1
+  end
+end
+
+require "rubygems"
+require "bundler/setup"
+
 require "trello"
 require "bicho"
 

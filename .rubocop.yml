@@ -96,3 +96,8 @@ Metrics/MethodLength:
 
 Metrics/ClassLength:
   Max: 250
+
+AllCops:
+  # do not check the locally installed gems
+  Exclude:
+    - '.vendor/**/*'

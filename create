@@ -59,11 +59,27 @@ def bicho_details(bug_id)
   { summary: bug.summary, product: bug.product, priority: Regexp.last_match(1) }
 end
 
+# create a card description text
+# @param bug_id bug number
+# @return [String] description text in the Markdown format
+def card_description(bug_id)
+  descr = <<EOT
+Bugzilla: #{bz_markdown_link(bug_id)}
+
+---
+## Review
+- Pull Request: *URL here*
+EOT
+
+  # just to avoid the trailing blank errors in the heredoc
+  descr + "- "
+end
+
 bug_id      = ARGV[0]
 details     = bicho_details(bug_id)
 product     = abbrev(details[:product])
 card_name   = "#{product} (#{details[:priority]}) ##{bug_id} #{details[:summary]}"
-description = bz_markdown_link(bug_id)
+description = card_description(bug_id)
 list_id     = product_to_list(product)
 # list_id     = "546336636415e12617f88e47" # My work / Done
 

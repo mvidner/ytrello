@@ -18,14 +18,8 @@ Tools to help with the YaST Trello boards.
 
 Install the `python-bugzilla` tool via `sudo zypper install python-bugzilla`.
 
-It is recommended to use bundler to install the Rubygems, run this in the Git
-checkout:
-
-```sh
-bundle install --path vendor/bundle
-```
-
-Then prefix the commands by `bundle exec`, e.g. `bundle exec ./check`.
+The Ytrello scripts automatically install the needed Ruby gems into the
+`.vendor` subdirectory during the first run using `bundler`.
 
 ### Setup
 
