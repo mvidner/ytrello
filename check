@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
+require_relative "ytrello"
+
 require "rainbow"
 require "optparse"
-
-require_relative "ytrello"
 
 # If a Trello card contains just a number without "FATE" (case insensitive)
 # it might be a FATE number instead of a bug number. Consider it as a possible
