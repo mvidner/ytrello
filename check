@@ -83,7 +83,7 @@ def find_trello_bugs
     next unless CHECKED_LISTS.include?(card.list_id)
 
     # TODO: skip FATE cards for now, maybe add a FATE check as well?
-    next if card.name.match(/\bfate\b/i)
+    next if card.name.match(/\bfate\b/i) || card.name.match(/\bfeature\b/i)
 
     # skip cards not containing any bug number
     # expect bug numbers have 6 or 7 digits
@@ -98,8 +98,10 @@ end
 
 def find_closed_trello_bugs(found_trello_bugs)
   closed_bugs = {}
+  # ignore "small" numbers, they most probably refer to a feature
+  bugnumbers = found_trello_bugs.keys.select { |n| n > FATE_NUMBER_MAX }
 
-  Bicho.client.get_bugs(*found_trello_bugs.keys).each do |bug|
+  Bicho.client.get_bugs(*bugnumbers).each do |bug|
     next if bug.resolution.empty?
     closed_bugs[bug] = found_trello_bugs[bug.id]
   end
