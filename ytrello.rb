@@ -22,32 +22,28 @@ TEAM_1_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST: Team 1
 TEAM_A_BOARD_ID = "557833ad6be7b9634f089201" # Agile YaST: Team A
 
 # Trello list IDs, see [*] how to get the IDs
+# JR: * not found, so I use in trello method with export to json and there are
+# ids of everything
 CHECKED_LISTS = [
-  # Incoming board
+  # Incoming board, keep sorted same as incomming board
   # Backlog Team A
   "5502d691d05c3b3817317566",
-  # SLE12-SP1 development
-  "5502d6719b0d5db70bcf6655",
-  # Generic Ideas
-  "5507f28d31c1cfac7a83eb72",
+  # Backlog Team 1
+  "557835b5cb9c13dcd032ecbb",
   # SLE12-SP2 development
   "5538994821027776154180eb",
-  # SLE-13
-  "55f921f1cc340f0d071fa4dc",
+  # Generic Ideas
+  "5507f28d31c1cfac7a83eb72",
   # SLE12-maintenance
   "5507f04f2c885ffbdd53208a",
-  # SLE11-SP4 development
-  "5507f0549c920252e89da5ad",
+  # SLE12-SP1 maintenance
+  "5507f04ba946797c971ecde3",
   # SLE11-maintenance
   "5507f140ab44b6bcfcc6c561",
   # openSUSE
   "550800984de3079fa9ded12a",
-  # SLE12-SP1 maintenance
-  "5507f04ba946797c971ecde3",
 
   # Team 1 boards
-  # Backlog Team 1
-  "557835b5cb9c13dcd032ecbb",
   # Sprint Backlog
   "5577ed07930f16fb224ca248",
   # Doing

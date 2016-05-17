@@ -25,12 +25,9 @@ end
 
 # in that board:
 PRODUCT_LISTS = {
-  /SLE[SD]12-SP1/ => "5502d6719b0d5db70bcf6655", # SLE12-SP1 development
+  /SLE[SD]12-SP2/ => "5538994821027776154180eb",      # SLE12-SP2 development
+  /SLE[SD]12-SP1/ => "5507f04ba946797c971ecde3",      # SLE12-SP1 maintenance
   /SLE[SD]12/     => "5507f04f2c885ffbdd53208a", # SLE12-maintenance
-  # not yet:
-  # /SLE[SD]12-SP2/ => "5538994821027776154180eb",      # SLE12-SP2 development
-  # /SLE[SD]12-SP1/ => "5507f04ba946797c971ecde3",      # SLE12-SP1 maintenance
-  /SLE[SD]11-SP4/ => "5507f0549c920252e89da5ad", # SLE11-SP4 development
   /SLE[SD]11/     => "5507f140ab44b6bcfcc6c561", # SLE11-maintenance
   /^oS/           => "550800984de3079fa9ded12a", # openSUSE
   # fallback
