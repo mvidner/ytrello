@@ -88,7 +88,7 @@ ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || raise
 labels = inc_board.labels(false) # false: objects; true: names
 new_item_label = labels.find { |i| i.name =~ /new.item/i } || raise
 
-Trello::List.find(list_id) ||
+list = Trello::List.find(list_id) ||
   raise("Cannot find list #{list_id} to represent #{details[:product]}")
 
 inc_cards  = to_array inc_board.cards
@@ -102,6 +102,9 @@ end
 card = nil
 if existing.empty?
   debug "Creating"
+
+  raise "Trying to add to already archived list '#{list.name}'" if list.closed
+
   card = Trello::Card.create(list_id: list_id,
                              name:    card_name,
                              desc:    description,
