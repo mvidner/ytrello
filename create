@@ -26,7 +26,7 @@ end
 # in that board:
 PRODUCT_LISTS = {
   /SLE[SD]12-SP2/ => "5538994821027776154180eb",      # SLE12-SP2 development
-  /SLE[SD]12-SP1/ => "5507f04ba946797c971ecde3",      # SLE12-SP1 maintenance
+  /SLE[SD]12-SP1/ => "5502d6719b0d5db70bcf6655",      # SLE12-SP1 maintenance
   /SLE[SD]12/     => "5507f04f2c885ffbdd53208a", # SLE12-maintenance
   /SLE[SD]11/     => "5507f140ab44b6bcfcc6c561", # SLE11-maintenance
   /^oS/           => "550800984de3079fa9ded12a", # openSUSE
@@ -88,7 +88,7 @@ ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || raise
 labels = inc_board.labels(false) # false: objects; true: names
 new_item_label = labels.find { |i| i.name =~ /new.item/i } || raise
 
-Trello::List.find(list_id) ||
+list = Trello::List.find(list_id) ||
   raise("Cannot find list #{list_id} to represent #{details[:product]}")
 
 inc_cards  = to_array inc_board.cards
@@ -102,6 +102,9 @@ end
 card = nil
 if existing.empty?
   debug "Creating"
+
+  raise "Trying to add to already archived list '#{list.name}'" if list.closed
+
   card = Trello::Card.create(list_id: list_id,
                              name:    card_name,
                              desc:    description,

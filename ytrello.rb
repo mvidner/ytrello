@@ -37,7 +37,7 @@ CHECKED_LISTS = [
   # SLE12-maintenance
   "5507f04f2c885ffbdd53208a",
   # SLE12-SP1 maintenance
-  "5507f04ba946797c971ecde3",
+  "5502d6719b0d5db70bcf6655",
   # SLE11-maintenance
   "5507f140ab44b6bcfcc6c561",
   # openSUSE
