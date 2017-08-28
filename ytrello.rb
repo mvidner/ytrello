@@ -21,9 +21,7 @@ INC_BOARD_ID  = "5507f013b863aa041618871d" # Agile YaST Incoming Board
 TEAM_1_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST: Team 1
 TEAM_A_BOARD_ID = "557833ad6be7b9634f089201" # Agile YaST: Team A
 
-# Trello list IDs, see [*] how to get the IDs
-# JR: * not found, so I use in trello method with export to json and there are
-# ids of everything
+# Trello list IDs, see also show_list_ids
 CHECKED_LISTS = [
   # Incoming board, keep sorted same as incomming board
   # Backlog Team A

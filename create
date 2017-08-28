@@ -17,19 +17,24 @@ def abbrev(s)
     .sub("openSUSE", "oS")
     .sub("SUSE Linux Enterprise Desktop", "SLED")
     .sub("SUSE Linux Enterprise Server",  "SLES")
+    .sub("SUSE Container as a Service Platform 1.0", "CaaSP1")
     .sub(/\(.*\)/, "")          # remove superfluous abbreviation
     .sub(" SP", "-SP")
     .sub(" Factory", "-TW")     # Tumbleweed
     .tr(" ", "")
 end
 
-# in that board:
+# Trello list IDs, see also show_list_ids
 PRODUCT_LISTS = {
-  /SLE[SD]12-SP2/ => "5538994821027776154180eb",      # SLE12-SP2 development
-  /SLE[SD]12-SP1/ => "5502d6719b0d5db70bcf6655",      # SLE12-SP1 maintenance
+  /SLE[SD]15/     => "5952060e0e9190605c75863e", # SLE 15
+  # "59a3db0f0fac7c99d1808ae9" is "SLE 15 Storage" but we can't autodetect that
+  /SLE[SD]12-SP3/ => "57cfdbcc9ae10f3d1fb996d3", # SLE-12-SP3 Maintenance
+  /SLE[SD]12-SP2/ => "5538994821027776154180eb", # SLE12-SP2 Maintenance
+  /SLE[SD]12-SP1/ => "5502d6719b0d5db70bcf6655", # SLE12-SP1 maintenance
   /SLE[SD]12/     => "5507f04f2c885ffbdd53208a", # SLE12-maintenance
   /SLE[SD]11/     => "5507f140ab44b6bcfcc6c561", # SLE11-maintenance
   /^oS/           => "550800984de3079fa9ded12a", # openSUSE
+  /CaaSP1/        => "5877cf5650f2787cf6eb25a1", # CaaSP 1.0
   # fallback
   /./             => "5507f28d31c1cfac7a83eb72"  # Generic Ideas
 }

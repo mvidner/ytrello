@@ -68,9 +68,6 @@ def trello_cards
   t1_board = Trello::Board.find(TEAM_1_BOARD_ID) || raise
   ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || raise
 
-  # [*] If you need to get all lists in a board:
-  # inc_board.lists.each {|l| puts "# #{l.name}\n\"#{l.id}\","}
-
   to_array(inc_board.cards) + to_array(t1_board.cards) + to_array(ta_board.cards)
 end
 

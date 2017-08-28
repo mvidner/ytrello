@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require_relative "ytrello"
+
+check_trello_credentials
+setup_trello
+
+inc_board = Trello::Board.find(INC_BOARD_ID) || raise
+inc_board.lists.each { |l| puts "\"#{l.id}\", # #{l.name}" }
