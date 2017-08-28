@@ -24,7 +24,7 @@ def abbrev(s)
     .tr(" ", "")
 end
 
-# in that board:
+# Trello list IDs, see also show_list_ids
 PRODUCT_LISTS = {
   /SLE[SD]15/     => "5952060e0e9190605c75863e", # SLE 15
   # "59a3db0f0fac7c99d1808ae9" is "SLE 15 Storage" but we can't autodetect that
