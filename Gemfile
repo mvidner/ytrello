@@ -16,5 +16,5 @@ gem "rainbow", ">= 2.0.0"
 gem "activemodel", "< 5", require: false if RUBY_VERSION.start_with?("2.1.")
 
 group :development do
-  gem "rubocop", "~> 0.29.1", require: false
+  gem "rubocop", "0.41.2", require: false
 end
