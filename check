@@ -64,7 +64,7 @@ end
 # read all Trello cards from the Incoming and the Team boards
 # @return [Array<Trello::Card>] found cards
 def trello_cards
-  inc_board  = Trello::Board.find(INC_BOARD_ID)  || raise
+  inc_board = Trello::Board.find(INC_BOARD_ID) || raise
   t1_board = Trello::Board.find(TEAM_1_BOARD_ID) || raise
   ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || raise
 
@@ -84,7 +84,7 @@ def find_trello_bugs
 
     # skip cards not containing any bug number
     # expect bug numbers have 6 or 7 digits
-    next unless card.name.match(/\b#?(\d{6,7})\b/)
+    next unless card.name =~ /\b#?(\d{6,7})\b/
 
     bug_id = Regexp.last_match[1].to_i
     trello_bugs[bug_id] = card

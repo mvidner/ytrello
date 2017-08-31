@@ -1,5 +1,5 @@
 # install missing gems using bundler
-bundler_dir =  File.expand_path("../.vendor", __FILE__)
+bundler_dir = File.expand_path("../.vendor", __FILE__)
 
 if !File.exist?(bundler_dir)
   puts "Installing needed Rubygems to #{bundler_dir} ..."
@@ -17,9 +17,9 @@ require "trello"
 require "bicho"
 
 # Trello board IDs
-INC_BOARD_ID  = "5507f013b863aa041618871d" # Agile YaST Incoming Board
-TEAM_1_BOARD_ID = "5502d5dd8eb45fb4581c1a0f" # Agile YaST: Team 1
-TEAM_A_BOARD_ID = "557833ad6be7b9634f089201" # Agile YaST: Team A
+INC_BOARD_ID = "5507f013b863aa041618871d".freeze # Agile YaST Incoming Board
+TEAM_1_BOARD_ID = "5502d5dd8eb45fb4581c1a0f".freeze # Agile YaST: Team 1
+TEAM_A_BOARD_ID = "557833ad6be7b9634f089201".freeze # Agile YaST: Team A
 
 # Trello list IDs, see also show_list_ids
 CHECKED_LISTS = [
@@ -52,13 +52,13 @@ CHECKED_LISTS = [
   "5502d69d3e68ab3d1729337e",
   # Doing
   "557833dde4f1218b7d1cf831"
-]
+].freeze
 
-BUGZILLA_URL = "https://bugzilla.suse.com"
-BUGZILLA_ACCOUNT = "yast-internal@suse.de"
+BUGZILLA_URL = "https://bugzilla.suse.com".freeze
+BUGZILLA_ACCOUNT = "yast-internal@suse.de".freeze
 
-ENV_TRELLO_KEY = "TRELLO_DEVELOPER_PUBLIC_KEY"
-ENV_TRELLO_TOKEN = "TRELLO_MEMBER_TOKEN"
+ENV_TRELLO_KEY = "TRELLO_DEVELOPER_PUBLIC_KEY".freeze
+ENV_TRELLO_TOKEN = "TRELLO_MEMBER_TOKEN".freeze
 
 def check_trello_credentials
   return if ENV[ENV_TRELLO_KEY] && ENV[ENV_TRELLO_TOKEN]

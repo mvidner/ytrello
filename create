@@ -36,8 +36,8 @@ PRODUCT_LISTS = {
   /^oS/           => "550800984de3079fa9ded12a", # openSUSE
   /CaaSP1/        => "5877cf5650f2787cf6eb25a1", # CaaSP 1.0
   # fallback
-  /./             => "5507f28d31c1cfac7a83eb72"  # Generic Ideas
-}
+  /./             => "5507f28d31c1cfac7a83eb72" # Generic Ideas
+}.freeze
 
 def product_to_list(product)
   PRODUCT_LISTS.to_a.each do |pattern, list_id|
@@ -57,7 +57,7 @@ end
 def bicho_details(bug_id)
   bug = Bicho.client.get_bugs(bug_id).first
   raise "Bug ##{bug_id} not found" unless bug
-  bug.priority.match(/^(\S+)\s/)
+  bug.priority =~ /^(\S+)\s/
   { summary: bug.summary, product: bug.product, priority: Regexp.last_match(1) }
 end
 
@@ -86,7 +86,7 @@ list_id     = product_to_list(product)
 # list_id     = "546336636415e12617f88e47" # My work / Done
 
 debug "Trello query"
-inc_board  = Trello::Board.find(INC_BOARD_ID)  || raise
+inc_board = Trello::Board.find(INC_BOARD_ID) || raise
 t1_board = Trello::Board.find(TEAM_1_BOARD_ID) || raise
 ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || raise
 
