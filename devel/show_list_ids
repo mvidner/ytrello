@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative "ytrello"
+require_relative "../ytrello"
 
 setup_trello
 
