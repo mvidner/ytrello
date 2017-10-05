@@ -23,19 +23,17 @@ The Ytrello scripts automatically install the needed Ruby gems into the
 
 ### Setup
 
-**ruby-trello** reads the environment variables
-`TRELLO_DEVELOPER_PUBLIC_KEY` and `TRELLO_MEMBER_TOKEN`. I put them in
-`~/.trellorc` and source it from my `~/.bashrc`
+**ruby-trello** reads the configuration file `~/.config/trello-creds.yml`:
 
 - The Developer Public Key is the first hex string on
   <https://trello.com/app-key>
 
 ```sh
-F=~/.trellorc
+F=~/.config/trello-creds.yml`
 touch $F
 chmod 700 $F
 echo "# https://github.com/mvidner/ytrello" >> $F
-echo "export TRELLO_DEVELOPER_PUBLIC_KEY=replaceme" >> $F
+echo "TRELLO_DEVELOPER_PUBLIC_KEY: replaceme" >> $F
 vi $F
 ```
 
@@ -43,11 +41,14 @@ After you fill in the developer key, use this to request an app token, then
 copy the generated token to the config file.
 
 ```sh
-. $F
-xdg-open "https://trello.com/1/authorize?key=$TRELLO_DEVELOPER_PUBLIC_KEY&name=ytrello&expiration=never&response_type=token&scope=read,write"
-echo "export TRELLO_MEMBER_TOKEN=replaceme" >>$F
+xdg-open "https://trello.com/1/authorize?key=REPLACEME&name=ytrello&expiration=never&response_type=token&scope=read,write"
+echo "TRELLO_MEMBER_TOKEN: replaceme" >>$F
 vi $F
 ```
+
+For backward compatibility, the environment variables
+`TRELLO_DEVELOPER_PUBLIC_KEY` and `TRELLO_MEMBER_TOKEN` are respected, and
+even preferred over the configuration file.
 
 **bicho** and **python-bugzilla** read ~/.oscrc so if you have used `osc` it
 should work already.

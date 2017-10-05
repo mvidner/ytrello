@@ -15,6 +15,7 @@ require "bundler/setup"
 
 require "trello"
 require "bicho"
+require "yaml"
 
 # Trello board IDs
 INC_BOARD_ID = "5507f013b863aa041618871d".freeze # Agile YaST Incoming Board
@@ -60,13 +61,6 @@ BUGZILLA_ACCOUNT = "yast-internal@suse.de".freeze
 ENV_TRELLO_KEY = "TRELLO_DEVELOPER_PUBLIC_KEY".freeze
 ENV_TRELLO_TOKEN = "TRELLO_MEMBER_TOKEN".freeze
 
-def check_trello_credentials
-  return if ENV[ENV_TRELLO_KEY] && ENV[ENV_TRELLO_TOKEN]
-  $stderr.puts "Error: Pass the Trello credentials via #{ENV_TRELLO_KEY}" \
-  " and\n#{ENV_TRELLO_TOKEN} environment variables."
-  exit 1
-end
-
 # set the SUSE Bugzilla connection
 def setup_bicho
   Bicho.client = Bicho::Client.new(BUGZILLA_URL)
@@ -74,9 +68,21 @@ end
 
 # set the Trello credentials
 def setup_trello
+  fn = "#{ENV["HOME"]}/.config/trello-creds.yml"
+  text = begin; File.read(fn); rescue Errno::ENOENT; ""; end
+  creds = Hash(YAML.safe_load(text))
+  key = ENV[ENV_TRELLO_KEY] || creds[ENV_TRELLO_KEY]
+  token = ENV[ENV_TRELLO_TOKEN] || creds[ENV_TRELLO_TOKEN]
+  unless key && token
+    msg = "Error: Pass the Trello credentials via #{ENV_TRELLO_KEY} and\n" \
+          "  #{ENV_TRELLO_TOKEN}, either in #{fn} or in environment variables."
+    $stderr.puts msg
+    exit 1
+  end
+
   Trello.configure do |config|
-    config.developer_public_key = ENV[ENV_TRELLO_KEY]
-    config.member_token         = ENV[ENV_TRELLO_TOKEN]
+    config.developer_public_key = key
+    config.member_token = token
   end
 end
 

@@ -1,0 +1,3 @@
+# Put this to ~/.config/trello-creds.yml
+TRELLO_DEVELOPER_PUBLIC_KEY: ffffffffffffffffffffffffffffffff
+TRELLO_MEMBER_TOKEN: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff

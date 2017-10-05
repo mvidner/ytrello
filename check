@@ -179,8 +179,6 @@ end
 
 options = parse_options
 
-check_trello_credentials
-
 setup_bicho
 setup_trello
 
