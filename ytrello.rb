@@ -69,7 +69,7 @@ end
 # set the Trello credentials
 def setup_trello
   fn = "#{ENV["HOME"]}/.config/trello-creds.yml"
-  text = begin; File.read(fn); rescue Errno::ENOENT; ""; end
+  text = File.exist?(fn) ? File.read(fn) : ""
   creds = Hash(YAML.safe_load(text))
   key = ENV[ENV_TRELLO_KEY] || creds[ENV_TRELLO_KEY]
   token = ENV[ENV_TRELLO_TOKEN] || creds[ENV_TRELLO_TOKEN]
