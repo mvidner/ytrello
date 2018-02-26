@@ -53,7 +53,7 @@ def check_team_bugs
   all_bugs.each do |bug|
     if bug["url"].nil? || bug["url"].empty?
       missing_bugs << bug
-    elsif !bug["url"].start_with?("https://trello.com/")
+    elsif !bug["url"].include?("https://trello.com/")
       unknown_links << bug
     end
   end

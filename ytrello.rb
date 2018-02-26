@@ -29,6 +29,12 @@ CHECKED_LISTS = [
   "5502d691d05c3b3817317566",
   # Backlog Team 1
   "557835b5cb9c13dcd032ecbb",
+  # SLE15 development
+  "5952060e0e9190605c75863e",
+  # SLE15 Storage development
+  "59a3db0f0fac7c99d1808ae9",
+  # SLE12-SP3 maintenance"
+  "5538994821027776154180eb",
   # SLE12-SP2 development
   "5538994821027776154180eb",
   # Generic Ideas
