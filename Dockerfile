@@ -2,11 +2,11 @@ FROM opensuse:42.3
 MAINTAINER Knut anderssen "kanderssen@suse.com"
 
 RUN zypper --gpg-auto-import-keys --non-interactive in --no-recommends \
-    gcc libxml2-devel libxslt-devel make ruby2.2-devel ruby2.2-rubygem-bundler \
+    gcc libxml2-devel libxslt-devel make ruby2.4-devel ruby2.4-rubygem-bundler \
     python-bugzilla ca-certificates gcc-c++ && zypper clean -a
 
 # Set Ruby 2.2 as the default version
-RUN ln -sf /usr/bin/ruby.ruby2.2 /usr/local/bin/ruby
+RUN ln -sf /usr/bin/ruby.ruby2.4 /usr/local/bin/ruby
 
 RUN mkdir -p /ytrello
 WORKDIR /ytrello
