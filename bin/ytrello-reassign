@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+bug_num = ARGV[0]
+FROM = "yast2-maintainers@suse.de".freeze
+TO = "yast-internal@suse.de".freeze
+
+if bug_num.nil? || bug_num == "-h"
+  puts <<TXT
+Usage: ytrello-reassign BUGNUM
+
+Reassign a bug
+  from the incoming account #{FROM}
+  to   the scrum    account #{TO}
+Does nothing if the original assignee is different.
+TXT
+  exit 1
+end
+
+assignee = `bugzilla query --outputformat='%{assigned_to}' -b #{bug_num}`
+if assignee == FROM
+  puts "Changing assignee from #{assignee} to #{TO}"
+  system "bugzilla", "modify", "--assignee", TO, bug_num
+elsif assignee == TO
+  puts "Assignee #{assignee} is already correct; unchanged"
+else
+  puts "Assignee #{assignee} unchanged"
+end

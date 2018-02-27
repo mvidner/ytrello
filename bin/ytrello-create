@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
+require "ytrello"
 require "English"
-require_relative "ytrello"
 
 if ARGV.empty? || ARGV[0].include?("-h")
   puts "Usage: #{$PROGRAM_NAME} bug_number"
@@ -124,5 +124,5 @@ end
 
 if card
   debug "Assigning card URL in Bugzilla"
-  system "./addurl", bug_id.to_s, card.short_url.to_s
+  system "ytrello", "addurl", bug_id.to_s, card.short_url.to_s
 end
