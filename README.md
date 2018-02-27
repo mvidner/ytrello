@@ -4,10 +4,6 @@ Tools to help with the YaST Trello boards.
 
 - Make cards for bugs in Bugzilla.suse.com
 
-## Use with Docker
-
-The use of ytrello with docker is documented [here](README-docker.md)
-
 ### Requirements
 
 - [bicho.gem][b] >= 0.0.10
@@ -20,10 +16,26 @@ The use of ytrello with docker is documented [here](README-docker.md)
 
 ### Installation
 
-Install the `python-bugzilla` tool via `sudo zypper install python-bugzilla`.
+From a Git checkout:
 
-The Ytrello scripts automatically install the needed Ruby gems into the
-`.vendor` subdirectory during the first run using `bundler`.
+```sh
+sudo zypper install python-bugzilla
+bundle install
+alias ytrello="bundle exec ytrello"
+```
+
+From Rubygems:
+
+```sh
+sudo zypper install python-bugzilla
+gem install ytrello
+```
+
+From OBS, this selects the appropriate Ruby version:
+
+```sh
+zypper install -C 'rubygem(ytrello)'
+```
 
 ### Setup
 
@@ -62,7 +74,7 @@ should work already.
 - **create**
 
 ```sh
-create $BUG_NUMBER
+ytrello create $BUG_NUMBER
 ```
 
 
@@ -71,7 +83,7 @@ create $BUG_NUMBER
   assign the **URL** field of a bug unless the field is already present.
 
 ```sh
-addurl 999999 https://trello.example.com/cards/my-first-card
+ytrello addurl 999999 https://trello.example.com/cards/my-first-card
 ```
 
 - **check** runs some validation checks and reports the found issues:
@@ -95,11 +107,11 @@ addurl 999999 https://trello.example.com/cards/my-first-card
   It is recommended to run it in read-only mode first to see the found issues:
 
   ```sh
-  check
+  ytrello check
   ```
 
   If the reported changes are valid you can fix them by running:
 
   ```sh
-  check -a
+  ytrello check -a
   ```

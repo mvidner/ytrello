@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# Add a [related] URL field to a bug
+bug_num = ARGV[0]
+card_url = ARGV[1]
+
+has_url = `bugzilla query --outputformat='%{bug_file_loc}' -b #{bug_num}`.chomp
+
+if has_url.empty?
+  system "bugzilla", "modify", "--url", card_url, bug_num
+  puts "Card URL added to Bugzilla"
+end

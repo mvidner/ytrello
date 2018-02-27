@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
-
-require_relative "ytrello"
+require "ytrello"
 
 require "rainbow"
 require "optparse"

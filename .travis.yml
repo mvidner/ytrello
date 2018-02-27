@@ -1,6 +1,9 @@
 language: ruby
 sudo: false
 rvm:
+  # openSUSE Leap 15, SLE 15
+  - 2.5.0
+  # openSUSE Leap 42.3
   - 2.4.1
 script:
   - bundle exec rubocop

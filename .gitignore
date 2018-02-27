@@ -3,3 +3,5 @@
 /.vendor/
 oscrc
 trello-creds.yml
+ytrello-*.gem
+Gemfile.lock

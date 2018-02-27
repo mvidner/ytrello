@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+subcommand = ARGV.shift
+
+if subcommand.nil?
+  puts "Usage: ytrello SUBCOMMAND [ARGUMENTS...]"
+  exit 1
+end
+
+system "ytrello-#{subcommand}", *ARGV
