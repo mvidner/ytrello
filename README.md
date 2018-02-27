@@ -16,7 +16,26 @@ Tools to help with the YaST Trello boards.
 
 ### Installation
 
-Install the `python-bugzilla` tool via `sudo zypper install python-bugzilla`.
+From a Git checkout:
+
+```sh
+sudo zypper install python-bugzilla
+bundle install
+alias ytrello="bundle exec ytrello"
+```
+
+From Rubygems:
+
+```sh
+sudo zypper install python-bugzilla
+gem install ytrello
+```
+
+From OBS, this selects the appropriate Ruby version:
+
+```sh
+zypper install -C 'rubygem(ytrello)'
+```
 
 ### Setup
 
