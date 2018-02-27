@@ -4,6 +4,10 @@ Tools to help with the YaST Trello boards.
 
 - Make cards for bugs in Bugzilla.suse.com
 
+## Use with Docker
+
+The use of ytrello with docker is documented [here](README-docker.md)
+
 ### Requirements
 
 - [bicho.gem][b] >= 0.0.10

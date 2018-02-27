@@ -101,3 +101,4 @@ AllCops:
   # do not check the locally installed gems
   Exclude:
     - '.vendor/**/*'
+    - 'vendor/**/*'

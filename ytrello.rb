@@ -34,7 +34,7 @@ CHECKED_LISTS = [
   # SLE15 Storage development
   "59a3db0f0fac7c99d1808ae9",
   # SLE12-SP3 maintenance"
-  "5538994821027776154180eb",
+  "57cfdbcc9ae10f3d1fb996d3",
   # SLE12-SP2 development
   "5538994821027776154180eb",
   # Generic Ideas
