@@ -16,7 +16,7 @@
 #
 
 Name:           rubygem-ytrello
-Version:        0.18.0
+Version:        0.18.1
 Release:        0
 %define mod_name ytrello
 %define mod_full_name %{mod_name}-%{version}

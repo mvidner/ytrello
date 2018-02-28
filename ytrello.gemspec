@@ -42,7 +42,7 @@ TXT
   s.requirements << "python-bugzilla, with the SUSE flavor"
 
   s.add_dependency "bicho", ">= 0.0.10"
-  s.add_dependency "ruby-trello", "~> 1.3.0"
+  s.add_dependency "ruby-trello", ">= 1.3.0"
   s.add_dependency "rainbow", ">= 2.0.0"
 
   s.add_development_dependency "rubocop", "0.41.2"
