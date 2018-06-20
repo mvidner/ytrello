@@ -6,6 +6,7 @@ require "yaml"
 INC_BOARD_ID = "5507f013b863aa041618871d".freeze # Agile YaST Incoming Board
 TEAM_1_BOARD_ID = "5502d5dd8eb45fb4581c1a0f".freeze # Agile YaST: Team 1
 TEAM_A_BOARD_ID = "557833ad6be7b9634f089201".freeze # Agile YaST: Team A
+TEAM_S_NO_SCRUM = "5a55d35ca6cb8d380b5a6f37".freeze # Agile YaST: Team S no Scrum
 
 # Trello list IDs, see also show_list_ids
 CHECKED_LISTS = [
@@ -43,7 +44,19 @@ CHECKED_LISTS = [
   # Sprint Backlog
   "5502d69d3e68ab3d1729337e",
   # Doing
-  "557833dde4f1218b7d1cf831"
+  "557833dde4f1218b7d1cf831",
+
+  # Team S No SCRUM
+  # Incoming Backlog (storage-ng)
+  "5502d691d05c3b3817317566",
+  # Incoming backlog (other)
+  "5a86c1c40f43d52085c37808",
+  # Current Backlog
+  "56b1c34524d3a3599234affb",
+  # Doing
+  "557833dde4f1218b7d1cf831",
+  # Done
+  "5a26d54ecd9e0bb490360204"
 ].freeze
 
 BUGZILLA_URL = "https://bugzilla.suse.com".freeze

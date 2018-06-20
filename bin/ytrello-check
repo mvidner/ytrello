@@ -66,8 +66,10 @@ def trello_cards
   inc_board = Trello::Board.find(INC_BOARD_ID) || raise
   t1_board = Trello::Board.find(TEAM_1_BOARD_ID) || raise
   ta_board = Trello::Board.find(TEAM_A_BOARD_ID) || raise
+  ts_board = Trello::Board.find(TEAM_S_NO_SCRUM) || raise
 
-  to_array(inc_board.cards) + to_array(t1_board.cards) + to_array(ta_board.cards)
+  to_array(inc_board.cards) + to_array(t1_board.cards) + to_array(ta_board.cards) +
+    to_array(ts_board.cards)
 end
 
 # @return [Hash<Fixnum,Trello::Card>] map bug ID => Trello card
