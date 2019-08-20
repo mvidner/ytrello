@@ -37,7 +37,7 @@ TXT
 
   s.executables = s.files.grep(/^bin\//) { |f| File.basename(f) }
 
-  s.requirements << "python-bugzilla, with the SUSE flavor"
+  s.requirements << "python-bugzilla >= 2.1.0"
 
   s.add_dependency "bicho", ">= 0.0.10"
   s.add_dependency "ruby-trello", ">= 1.3.0"

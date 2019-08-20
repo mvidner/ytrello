@@ -21,7 +21,7 @@ Release:        0
 %define mod_name ytrello
 %define mod_full_name %{mod_name}-%{version}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-Requires:       python-bugzilla
+Requires:       python-bugzilla >= 2.1.0
 BuildRequires:  ruby-macros >= 5
 BuildRequires:  %{ruby}
 BuildRequires:  %{rubygem gem2rpm}
