@@ -20,7 +20,6 @@ TXT
     ".rubocop.yml",
     ".travis.yml",
     "Gemfile",
-    "Gemfile.lock",
     "README.md",
     "VERSION",
     "bin/ytrello",
@@ -32,6 +31,8 @@ TXT
     "devel/show_list_ids",
     "lib/ytrello.rb",
     "lib/ytrello/version.rb",
+    "package/rubygem-ytrello.changes",
+    "package/rubygem-ytrello.spec",
     "ytrello.gemspec"
   ]
 
