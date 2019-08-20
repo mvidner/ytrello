@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-
 require File.expand_path(File.dirname(__FILE__) + "/lib/ytrello/version")
 
 Gem::Specification.new do |s|
@@ -45,5 +43,5 @@ TXT
   s.add_dependency "ruby-trello", ">= 1.3.0"
   s.add_dependency "rainbow", ">= 2.0.0"
 
-  s.add_development_dependency "rubocop", "0.41.2"
+  s.add_development_dependency "rubocop", "0.50.0"
 end
