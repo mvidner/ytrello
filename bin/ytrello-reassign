@@ -16,7 +16,7 @@ TXT
   exit 1
 end
 
-assignee = `bugzilla query --outputformat='%{assigned_to}' -b #{bug_num}`
+assignee = `bugzilla query --outputformat='%{assigned_to}' -b #{bug_num}`.chomp
 if assignee == FROM
   puts "Changing assignee from #{assignee} to #{TO}"
   system "bugzilla", "modify", "--assignee", TO, bug_num
