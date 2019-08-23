@@ -83,9 +83,6 @@ def find_trello_bugs
   trello_bugs = {}
 
   trello_cards.each do |card|
-    # skip cards not in the specified list
-    next unless CHECKED_LISTS.include?(card.list_id)
-
     # TODO: skip FATE cards for now, maybe add a FATE check as well?
     next if card.name.match(/\bfate\b/i) || card.name.match(/\bfeature\b/i)
 
