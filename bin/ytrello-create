@@ -65,13 +65,13 @@ end
 # @param bug_id bug number
 # @return [String] description text in the Markdown format
 def card_description(bug_id)
-  descr = <<EOT
+  descr = <<TXT
 Bugzilla: #{bz_markdown_link(bug_id)}
 
 ---
 ## Review
 - Pull Request: *URL here*
-EOT
+TXT
 
   # just to avoid the trailing blank errors in the heredoc
   descr + "- "

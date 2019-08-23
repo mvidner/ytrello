@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Aug 20 13:58:09 UTC 2019 - Martin Vidner <mvidner@suse.com>
+
+- Adapt to the way python-bugzilla 2.1.0 needs pointing to
+  bugzilla.suse.com
+- 0.19.0
+
+-------------------------------------------------------------------
 Wed Feb 28 10:04:48 UTC 2018 - mvidner@suse.com
 
 - Accept also newer ruby-trello, 2.0

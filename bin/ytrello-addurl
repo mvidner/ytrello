@@ -3,9 +3,11 @@
 bug_num = ARGV[0]
 card_url = ARGV[1]
 
-has_url = `bugzilla query --outputformat='%{bug_file_loc}' -b #{bug_num}`.chomp
+SUSE_BZ = "--bugzilla=https://bugzilla.suse.com/xmlrpc.cgi".freeze
+
+has_url = `bugzilla #{SUSE_BZ} query --outputformat='%{bug_file_loc}' -b #{bug_num}`.chomp
 
 if has_url.empty?
-  system "bugzilla", "modify", "--url", card_url, bug_num
+  system "bugzilla", SUSE_BZ, "modify", "--url", card_url, bug_num
   puts "Card URL added to Bugzilla"
 end

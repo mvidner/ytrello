@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-
 require File.expand_path(File.dirname(__FILE__) + "/lib/ytrello/version")
 
 Gem::Specification.new do |s|
@@ -22,7 +20,6 @@ TXT
     ".rubocop.yml",
     ".travis.yml",
     "Gemfile",
-    "Gemfile.lock",
     "README.md",
     "VERSION",
     "bin/ytrello",
@@ -34,16 +31,18 @@ TXT
     "devel/show_list_ids",
     "lib/ytrello.rb",
     "lib/ytrello/version.rb",
+    "package/rubygem-ytrello.changes",
+    "package/rubygem-ytrello.spec",
     "ytrello.gemspec"
   ]
 
   s.executables = s.files.grep(/^bin\//) { |f| File.basename(f) }
 
-  s.requirements << "python-bugzilla, with the SUSE flavor"
+  s.requirements << "python-bugzilla >= 2.1.0"
 
   s.add_dependency "bicho", ">= 0.0.10"
   s.add_dependency "ruby-trello", ">= 1.3.0"
   s.add_dependency "rainbow", ">= 2.0.0"
 
-  s.add_development_dependency "rubocop", "0.41.2"
+  s.add_development_dependency "rubocop", "0.50.0"
 end

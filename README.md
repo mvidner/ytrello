@@ -8,7 +8,7 @@ Tools to help with the YaST Trello boards.
 
 - [bicho.gem][b] >= 0.0.10
 - [ruby-trello.gem][t]
-- [python-bugzilla][p], with the SUSE flavor
+- [python-bugzilla][p] >= 2.1.0
 
 [b]: https://github.com/dmacvicar/bicho
 [t]: https://github.com/jeremytregunna/ruby-trello
