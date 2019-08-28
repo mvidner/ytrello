@@ -4,6 +4,16 @@ require "ytrello"
 require "rainbow"
 require "optparse"
 
+module Trello
+  # Track card visibility (monkey-patch).
+  # There's apparently no better way to track visibility of cards.
+  # Non-archived cards can be in archived lists. And we have a lot of
+  # archived lists on the current sprint board.
+  class Card
+    attr_accessor :visible
+  end
+end
+
 # If a Trello card contains just a number without "FATE" (case insensitive)
 # it might be a FATE number instead of a bug number. Consider it as a possible
 # FATE number if it is below this limit.
@@ -23,6 +33,14 @@ def parse_options
       "currently only the missing Trello cards are created") do
 
       options[:auto_correct] = true
+    end
+
+    opts.on("--archive-cards", "Archive cards referring to closed bugs.") do
+      options[:archive_cards] = true
+    end
+
+    opts.on("-n", "--dry-run", "Show what would have been done.") do
+      options[:dry_run] = true
     end
 
     opts.on("-h", "--help", "Print this help") do
@@ -66,16 +84,31 @@ def yast_boards
   Trello::Organization.find("yastteam").boards.map(&:id)
 end
 
-# read all Trello cards from the Incoming and the Team boards
+# read all Trello cards from the YaST Team boards
 # @return [Array<Trello::Card>] found cards
 def trello_cards
   boards = yast_boards
 
-  cards = boards.collect do |b|
-    to_array(Trello::Board.find(b).cards)
+  card_hash = {}
+
+  [:open, :visible].each do |f|
+    cards = boards.collect do |b|
+      to_array(Trello::Board.find(b).cards(filter: f))
+    end
+    card_hash[f] = cards.flatten
   end
 
-  cards.flatten
+  visible = {}
+
+  card_hash[:visible].each do |c|
+    visible[c.id] = true
+  end
+
+  card_hash[:open].each do |c|
+    c.visible = !!visible[c.id]
+  end
+
+  card_hash[:open]
 end
 
 # @return [Hash<Fixnum,Trello::Card>] map bug ID => Trello card
@@ -208,16 +241,54 @@ if options[:auto_correct]
 
   team_bugs[:missing].each do |bug|
     puts "Creating a Trello card for bug ##{bug.id}..."
-    `#{create_script} #{bug.id}`
+    `#{create_script} #{bug.id}` unless options[:dry_run]
   end
 
   not_in_trello.each do |bug|
     puts "Creating a Trello card for bug ##{bug}..."
-    `#{create_script} #{bug}`
+    `#{create_script} #{bug}` unless options[:dry_run]
   end
 
   # potentially fixed everything?
   exit 0 if closed_trello_bugs.empty?
+end
+
+if options[:archive_cards]
+  puts "Archiving cards for closed bugs..."
+
+  board_names = {}
+  exclude_board = nil
+
+  # cache board names, we're too slow otherwise
+  yast_boards.each do |b|
+    board = Trello::Board.find(b)
+    board_names[board.id] = board.name
+    exclude_board = board.id if board.name == "YaST - $CURRENT Sprint"
+  end
+
+  exit 2 if exclude_board.nil?
+
+  closed_trello_bugs.each do |bug, card|
+    # skip cards on current sprint board
+    next if card.visible && card.board_id == exclude_board
+
+    # for the cautious...
+    # next if bug.resolution != "FIXED"
+
+    puts "  archiving #{card.short_url}, bsc##{bug.id} (#{bug.resolution}) --" \
+         " (#{board_names[card.board_id]}) # #{card.name}"
+
+    next if options[:dry_run]
+    # Trello::Card#close! seems to run into a bug in the library,
+    # so use the Trello API directly
+    put_url = "https://api.trello.com/1/cards/#{card.id}?" \
+              "key=#{Trello.configuration.developer_public_key}&" \
+              "token=#{Trello.configuration.member_token}&" \
+              "closed=true"
+    `curl --silent --request PUT --url '#{put_url}'`
+  end
+
+  exit 0
 end
 
 exit 1
