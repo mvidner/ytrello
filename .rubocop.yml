@@ -59,6 +59,10 @@ Style/StringLiteralsInInterpolation:
   StyleGuide: https://github.com/SUSE/style-guides/blob/master/Ruby.md#stylestringliteralsininterpolation
   EnforcedStyle: double_quotes
 
+# Less magic syntax is better than ease of typing
+Style/SymbolArray:
+  Enabled: false
+
 Style/WordArray:
   StyleGuide: https://github.com/SUSE/style-guides/blob/master/Ruby.md#deviations-from-the-upstream-style-guide
   Enabled: false
@@ -77,6 +81,11 @@ Style/SignalException:
 # This part contains the YaST specific changes to the shared SUSE configuration
 #
 ################################################################################
+
+# the stated reasons in the style guide neglect our use case of
+# producing a Boolean attribute
+Style/DoubleNegation:
+  Enabled: false
 
 # no extra indentation for multiline function calls
 Layout/AlignParameters:

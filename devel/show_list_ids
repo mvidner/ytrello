@@ -4,5 +4,9 @@ require "ytrello"
 
 setup_trello
 
-inc_board = Trello::Board.find(INC_BOARD_ID) || raise
-inc_board.lists.each { |l| puts "\"#{l.id}\", # #{l.name}" }
+boards = Trello::Organization.find("yastteam").boards
+
+boards.each do |b|
+  puts "board \"#{b.id}\", # #{b.name}"
+  b.lists.each { |l| puts "  \"#{l.id}\", # #{l.name}" }
+end
