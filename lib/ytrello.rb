@@ -3,7 +3,14 @@ require "bicho"
 require "yaml"
 
 # Trello board IDs
+TEAM_BOARD_ID = "5b2b92a1265a6fc3b05a7d51".freeze # YaST - $CURRENT Sprint
 INC_BOARD_ID = "5507f013b863aa041618871d".freeze # Agile YaST Incoming Board
+STORAGE_INC_BOARD_ID = "5b3095d97ee6207bb8c30e53".freeze # YaST: storage incoming
+
+INC_LIST_ID = "5de5018ad4d27a3dd108b357".freeze # Candidates to die / reassign
+STORAGE_INC_LIST_ID = "5c4893efbd272e161e53f691".freeze # General bugs
+
+# obsolete
 TEAM_1_BOARD_ID = "5502d5dd8eb45fb4581c1a0f".freeze # Agile YaST: Team 1
 TEAM_A_BOARD_ID = "557833ad6be7b9634f089201".freeze # Agile YaST: Team A
 TEAM_S_NO_SCRUM = "5a55d35ca6cb8d380b5a6f37".freeze # Agile YaST: Team S no Scrum

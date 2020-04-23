@@ -41,7 +41,7 @@ TXT
   s.requirements << "python-bugzilla >= 2.1.0"
 
   s.add_dependency "bicho", ">= 0.0.10"
-  s.add_dependency "ruby-trello", ">= 1.3.0"
+  s.add_dependency "ruby-trello", "~> 2.1.0"
   s.add_dependency "rainbow", ">= 2.0.0"
 
   s.add_development_dependency "rubocop", "0.50.0"
